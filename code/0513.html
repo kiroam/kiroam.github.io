@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>钞票张数计算</title>
+    <style>
+        body {
+            background: #eee;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft-Yahei', '微软雅黑';
+        }
+        
+        .main {
+            width: 450px;
+            height: 350px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -200px;
+            margin-left: -250px;
+            background: #fff;
+            padding: 25px;
+            border: 1px solid #bcbcbc;
+            border-radius: 5px;
+            box-shadow: 0px 0px 25px #b2b2b2;
+        }
+        
+        .main>.title>h1 {
+            text-align: center;
+            transition: all 1s;
+            position: relative;
+        }
+        
+        .main>.title>h1:hover {
+            color: #337ab7;
+        }
+        
+        h1::before {
+            content: '';
+            border-left: 5px solid #337ab7;
+            position: absolute;
+            left: -10px;
+        }
+        
+        .main>ul {
+            padding: 0;
+            margin: 0 auto;
+            width: 380px;
+            vertical-align: middle;
+            padding-top: 10px;
+        }
+        
+        .main .iconfont {
+            font-size: 30px;
+            vertical-align: middle;
+        }
+        
+        .main>ul>li {
+            list-style: none;
+            margin: 0 auto;
+            margin-top: 25px;
+            width: 85px;
+            display: inline-block;
+            font-size: 16px;
+            text-align: center;
+            vertical-align: middle;
+            background: #fafafa;
+            padding: 5px 3px;
+            color: #4f4f4f;
+            border-bottom: 3px solid #eee;
+            /* text-indent: 10px; */
+            transition: all .5s;
+            border-radius: 3px;
+        }
+        
+        .main>ul>li:hover {
+            background: rgb(238, 247, 255);
+            transform: scale(1.2, 1.2);
+        }
+        
+        .main>ul>li>span:last-child {
+            background: #fff;
+            margin: 2px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            color: #8c8c8c;
+            padding: 5px;
+        }
+        
+        span {
+            display: block;
+            user-select: none;
+            padding: 2px 0;
+        }
+        
+        form {
+            text-align: center;
+            width: 380px;
+            margin: 0 auto;
+            vertical-align: middle;
+        }
+        
+        #a {
+            width: 240px;
+            padding: 7px 10px;
+            border: 1px solid #d4d4d4;
+            vertical-align: middle;
+            height: 18px;
+            border-radius: 5px;
+            transition: all 1s;
+        }
+        
+        #a:focus {
+            outline: none;
+            border-color: #337ab7;
+        }
+        
+        #btn {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            transition: all 1s;
+        }
+        
+        #btn:hover {
+            color: #fff;
+            background-color: #286090;
+            border-color: #204d74;
+            cursor: pointer;
+        }
+        
+        #res {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: #333;
+            background-color: #fff;
+            border-color: #ccc;
+            transition: all 1s;
+        }
+        
+        #res:hover {
+            color: #333;
+            background-color: #d4d4d4;
+            border-color: #8c8c8c;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="title">
+            <h1>钞票张数计算</h1>
+        </div>
+        <form action="">
+            <input type="text" id="a" placeholder="请输入要计算的金额（长度<10）" maxlength="10">
+            <input type="button" id="btn" value="计算">
+            <input type="reset" id="res" value="重置">
+        </form>
+        <ul>
+            <li>
+                <span>￥100</span>
+                <span id="r100">0</span>
+            </li>
+            <li>
+                <span>￥50</span>
+                <span id="r50">0</span>
+            </li>
+            <li>
+                <span>￥20</span>
+                <span id="r20">0</span>
+            </li>
+            <li>
+                <span>￥10</span>
+                <span id="r10">0</span>
+            </li>
+            <li>
+                <span>￥5</span>
+                <span id="r5">0</span>
+            </li>
+            <li>
+                <span>￥1</span>
+                <span id="r1">0</span>
+            </li>
+            <li>
+                <span>￥0.5</span>
+                <span id="m5">0</span>
+            </li>
+            <li>
+                <span>￥0.1</span>
+                <span id="m1">0</span>
+            </li>
+        </ul>
+    </div>
+    <script>
+        document.getElementById("btn").onclick = function() {
+            var v = document.getElementById("a").value;
+            var num = v
+            var value = num
+            var bai = parseInt(value / 100)
+            value = value % 100
+            var wuShi = parseInt(value / 50)
+            value = value % 50
+            var erShi = parseInt(value / 20)
+            value = value % 20
+            var shi = parseInt(value / 10)
+            value = value % 10
+            var wu = parseInt(value / 5)
+            var yi = parseInt(value % 5)
+            vaue = num * 10 - parseInt(num) * 10
+            var wuMao = parseInt(vaue / 5)
+            var yiMao = parseInt(vaue % 5)
+            if (parseFloat(v).toString() == "NaN") {
+                alert('请输入数字')
+                return false;
+            } else {
+                document.getElementById("r100").innerHTML = bai
+                document.getElementById("r50").innerHTML = wuShi
+                document.getElementById("r20").innerHTML = erShi
+                document.getElementById("r10").innerHTML = shi
+                document.getElementById("r5").innerHTML = wu
+                document.getElementById("r1").innerHTML = yi
+                document.getElementById("m5").innerHTML = wuMao
+                document.getElementById("m1").innerHTML = yiMao
+            }
+        }
+        document.getElementById("res").onclick = function() {
+            document.getElementById("r100").innerHTML = '0'
+            document.getElementById("r50").innerHTML = '0'
+            document.getElementById("r20").innerHTML = '0'
+            document.getElementById("r10").innerHTML = '0'
+            document.getElementById("r5").innerHTML = '0'
+            document.getElementById("r1").innerHTML = '0'
+            document.getElementById("m5").innerHTML = '0'
+            document.getElementById("m1").innerHTML = '0'
+        }
+    </script>
+</body>
+
+</html>
